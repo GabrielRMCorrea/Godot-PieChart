@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://cbux5geqj1s7n"]
+
+[ext_resource type="Script" path="res://pie_chart.gd" id="1_sjhb4"]
+
+[node name="PieChart" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sjhb4")
+Values = {
+"Cats ": 30.0,
+"Dogs": 55,
+"Fish": 6,
+"Rabbits": 5,
+"Roddents": 4.0
+}
