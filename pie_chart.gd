@@ -2,6 +2,9 @@ extends Control
 
 # Keys should be Strings and values should be numbers
 @export var Values : Dictionary
+@export var Title : String
+@export var CenterCircle : bool = true
+@export var SeparationLines : bool = true
 
 func draw_circle_arc_poly(center, radius, angle_from, angle_to, color):
 	var nb_points = 32
@@ -13,7 +16,7 @@ func draw_circle_arc_poly(center, radius, angle_from, angle_to, color):
 	draw_colored_polygon(points_arc, color)
 
 func _draw():
-	for i in get_children():
+	for i in $Labels.get_children():
 		i.free()
 	var center = Vector2(size.x/2, size.y/2)	
 	var radius = min(size.x, size.y)/4 
@@ -29,19 +32,25 @@ func _draw():
 			#drawing on the screen
 			var percentage: float = Values[i]/(total/100)
 			var currentAngle:float = 360 * (percentage/100)
-			var angle := deg_to_rad(currentAngle/2 + previousAngle)
-			var anglePoint : Vector2 =  Vector2( cos(angle), sin(angle) ) * radius
+			var angle := deg_to_rad(currentAngle + previousAngle)
+			var anglePoint : Vector2 =  Vector2( cos(angle - deg_to_rad(currentAngle/2)), sin(angle - deg_to_rad(currentAngle/2) ) ) * radius
 			var label = Label.new()
 			label.text = i + "\n" + str(snappedf(percentage,0.01)).pad_decimals(2) + "%"
 			label.vertical_alignment = 1
 			label.horizontal_alignment = 1
-			add_child(label)
+			$Labels.add_child(label)
 			label.position =  center - label.size/2 + anglePoint  * 1.5
-			draw_line(anglePoint * 1.05 +center, anglePoint * 1.2 + center,Color.WHITE)
-			draw_circle_arc_poly( center, radius,previousAngle  ,previousAngle + currentAngle , color)
+			draw_line(anglePoint * 1.05 +center, anglePoint * 1.2 + center,Color.WHITE, 2, true)
+			draw_circle_arc_poly( center, radius,previousAngle ,previousAngle + currentAngle , color)
+			if SeparationLines:
+				draw_line(center, center +Vector2(cos(angle), sin(angle)) * radius, Color.WHITE, 2, true)
 			previousAngle += currentAngle
-
-
-
-
-
+	var titleLabel := $TitleLabel
+	if CenterCircle:
+		titleLabel.visible = true
+		draw_circle(center, radius*0.60, Color.WHITE)
+		titleLabel.text = Title
+		titleLabel.size = Vector2(radius,radius) 
+		titleLabel.position = center - titleLabel.size/2
+	else :
+		titleLabel.visible = false
