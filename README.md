@@ -22,7 +22,7 @@ Create and configure charts entirely through code:
 
 ```gdscript
 # Create and configure a new chart
-var chart = $PieChart
+@onready var chart = $PieChart
 
 # Configure properties
 chart.Values = {
