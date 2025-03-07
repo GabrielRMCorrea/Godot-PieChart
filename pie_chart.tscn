@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cbux5geqj1s7n"]
 
-[ext_resource type="Script" path="res://pie_chart.gd" id="1_sjhb4"]
+[ext_resource type="Script" uid="uid://biulhvvte3dvh" path="res://pie_chart.gd" id="1_sjhb4"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_oeq2n"]
 font_color = Color(0, 0, 0, 1)
@@ -13,15 +13,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sjhb4")
-Values = {
-"Cats ": 30.0,
-"Dogs": 60,
-"Fish": 6,
-"Rabbits": 5,
-"Roddents": 4.0
-}
-Title = "Pets"
-SeparationLines = false
 
 [node name="TitleLabel" type="Label" parent="."]
 layout_mode = 1

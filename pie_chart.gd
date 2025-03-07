@@ -1,10 +1,10 @@
 extends Control
 
 # Keys should be Strings and values should be numbers
-@export var Values : Dictionary
+@export var Values : Dictionary[String,float]
 @export var Title : String
 @export var CenterCircle : bool = true
-@export var SeparationLines : bool = true
+@export var SeparationLines : bool = false
 
 func draw_circle_arc_poly(center, radius, angle_from, angle_to, color):
 	var nb_points = 32
