@@ -1,10 +1,11 @@
 extends Control
 
-# Keys should be Strings and values should be numbers
+enum ColorScaleOptions {HSV, HSL}
 @export var Values : Dictionary[String,float]
 @export var Title : String
 @export var CenterCircle : bool = true
 @export var SeparationLines : bool = false
+@export var ColorScale : ColorScaleOptions = ColorScaleOptions.HSL
 
 func draw_circle_arc_poly(center, radius, angle_from, angle_to, color):
 	var nb_points = 32
@@ -27,7 +28,12 @@ func _draw():
 	for i in Values:
 		if Values[i] > 0.0:
 			#chosing color
-			var color : Color =  Color.from_hsv(1.0/(valuesSize+1) * counter/2 if counter%2 == 0 else 1.0/(valuesSize+1) * (valuesSize  - counter/2) ,0.6 if counter%4<2 else 0.8 ,0.9)
+			var color : Color 
+			match ColorScale :
+				ColorScaleOptions.HSV:
+					color =  Color.from_hsv(1.0/(valuesSize+1) * counter/2 if counter%2 == 0 else 1.0/(valuesSize+1) * (valuesSize  - counter/2) ,0.6 if counter%4<2 else 0.8 ,0.9)
+				ColorScaleOptions.HSL:
+					color = Color.from_ok_hsl(1.0/(valuesSize) * counter ,1,0.8  if counter%2 else 0.5)
 			counter += 1
 			#drawing on the screen
 			var percentage: float = Values[i]/(total/100)
