@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://dr55i4x5hjomc"]
+
+[ext_resource type="PackedScene" uid="uid://cbux5geqj1s7n" path="res://pie_chart.tscn" id="1_ig7tw"]
+
+[node name="main" type="GridContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 2
+
+[node name="PieChart" parent="." instance=ExtResource("1_ig7tw")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+Values = Dictionary[String, float]({
+"aaa": 23.0,
+"ccc": 19.0,
+"ddd": 20.0,
+"eee": 33.0
+})
+Title = "asdasdsd"
+CenterCircle = false
+ColorScale = 0
+CustomScale = Array[Color]([Color(0, 0, 1, 1), Color(0, 1, 0, 1), Color(1, 0, 0, 1)])
+
+[node name="PieChart2" parent="." instance=ExtResource("1_ig7tw")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+Values = Dictionary[String, float]({
+"aaa": 23.0,
+"asdasd": 20.0,
+"ccc": 19.0
+})
+Title = "titulo"
+SeparationLines = true
