@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://dr55i4x5hjomc"]
+[gd_scene load_steps=3 format=3 uid="uid://dr55i4x5hjomc"]
 
 [ext_resource type="PackedScene" uid="uid://cbux5geqj1s7n" path="res://pie_chart.tscn" id="1_ig7tw"]
+
+[sub_resource type="Gradient" id="Gradient_ig7tw"]
+colors = PackedColorArray(1, 0.25098, 0, 1, 1, 1, 0, 1)
 
 [node name="main" type="GridContainer"]
 anchors_preset = 15
@@ -10,20 +13,38 @@ grow_horizontal = 2
 grow_vertical = 2
 columns = 2
 
-[node name="PieChart" parent="." instance=ExtResource("1_ig7tw")]
+[node name="Control" type="Control" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+modulate = Color(0.0768358, 0.0768358, 0.0768358, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PieChart" parent="Control" instance=ExtResource("1_ig7tw")]
+layout_mode = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
 Values = Dictionary[String, float]({
-"aaa": 23.0,
-"ccc": 19.0,
-"ddd": 20.0,
-"eee": 33.0
+"aaa": 10.0,
+"asdasdasd": 22.0,
+"eee": 33.0,
+"ffff": 30.0,
+"gggg": 20.0
 })
 Title = "asdasdsd"
-CenterCircle = false
-ColorScale = 0
+LegendStyle = 2
+CenterText = "centro"
+SeparationLines = true
+ColorScale = 2
 CustomScale = Array[Color]([Color(0, 0, 1, 1), Color(0, 1, 0, 1), Color(1, 0, 0, 1)])
+ScaleGradient = SubResource("Gradient_ig7tw")
 
 [node name="PieChart2" parent="." instance=ExtResource("1_ig7tw")]
 layout_mode = 2
@@ -31,8 +52,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 Values = Dictionary[String, float]({
 "aaa": 23.0,
-"asdasd": 20.0,
-"ccc": 19.0
+"ccc": 19.0,
+"loremipsumdolor": 20.0
 })
-Title = "titulo"
-SeparationLines = true
+Title = "loremipsum"
+LegendStyle = 1
