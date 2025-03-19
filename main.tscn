@@ -31,18 +31,16 @@ grow_vertical = 2
 layout_mode = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
-Values = Dictionary[String, float]({
-"aaa": 10.0,
-"asdasdasd": 22.0,
-"eee": 33.0,
-"ffff": 30.0,
-"gggg": 20.0
+Elements = Dictionary[String, float]({
+"123asdasdsad": 25.0,
+"acasdsad": 26.0,
+"asdasdasdasd": 24.0,
+"dfgsdfgsdfg": 23.0
 })
 Title = "asdasdsd"
 LegendStyle = 2
 CenterText = "centro"
-SeparationLines = true
-ColorScale = 2
+ColorScale = 1
 CustomScale = Array[Color]([Color(0, 0, 1, 1), Color(0, 1, 0, 1), Color(1, 0, 0, 1)])
 ScaleGradient = SubResource("Gradient_ig7tw")
 
@@ -50,10 +48,8 @@ ScaleGradient = SubResource("Gradient_ig7tw")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-Values = Dictionary[String, float]({
-"aaa": 23.0,
-"ccc": 19.0,
-"loremipsumdolor": 20.0
-})
 Title = "loremipsum"
 LegendStyle = 1
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
