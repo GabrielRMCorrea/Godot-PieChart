@@ -3,7 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://cbux5geqj1s7n" path="res://pie_chart.tscn" id="1_ig7tw"]
 
 [sub_resource type="Gradient" id="Gradient_ig7tw"]
-colors = PackedColorArray(1, 0.25098, 0, 1, 1, 1, 0, 1)
+interpolation_color_space = 1
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1)
 
 [node name="main" type="GridContainer"]
 anchors_preset = 15
@@ -31,25 +32,27 @@ grow_vertical = 2
 layout_mode = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
-Elements = Dictionary[String, float]({
-"123asdasdsad": 25.0,
-"acasdsad": 26.0,
-"asdasdasdasd": 24.0,
-"dfgsdfgsdfg": 23.0
+elements = Dictionary[String, float]({
+"aaaaaaaaa": 10.0,
+"bbbbbbbb": 11.0,
+"cccccccccccccccccccccc": 12.0,
+"ddddddddddddddd": 13.0
 })
-Title = "asdasdsd"
-LegendStyle = 2
-CenterText = "centro"
-ColorScale = 1
-CustomScale = Array[Color]([Color(0, 0, 1, 1), Color(0, 1, 0, 1), Color(1, 0, 0, 1)])
-ScaleGradient = SubResource("Gradient_ig7tw")
+title = "aisuhaiushiaushapsuhiaush"
+legend_style = 2
+center_text = "center"
+separation_lines = true
+color_scale = 2
+scale_gradient = SubResource("Gradient_ig7tw")
 
 [node name="PieChart2" parent="." instance=ExtResource("1_ig7tw")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-Title = "loremipsum"
-LegendStyle = 1
-
-[node name="Panel" type="Panel" parent="."]
-layout_mode = 2
+elements = Dictionary[String, float]({
+"aaaaaaaaa": 10.0,
+"bbbbbbbb": 11.0,
+"cccccccccccccccccccccc": 12.0,
+"ddddddddddddddd": 13.0
+})
+color_scale = 1
