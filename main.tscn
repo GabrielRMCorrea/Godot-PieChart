@@ -1,10 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dr55i4x5hjomc"]
+[gd_scene load_steps=2 format=3 uid="uid://dr55i4x5hjomc"]
 
-[ext_resource type="PackedScene" uid="uid://cbux5geqj1s7n" path="res://pie_chart.tscn" id="1_ig7tw"]
-
-[sub_resource type="Gradient" id="Gradient_ig7tw"]
-interpolation_color_space = 1
-colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1)
+[ext_resource type="Script" uid="uid://biulhvvte3dvh" path="res://pie_chart.gd" id="1_ig7tw"]
 
 [node name="main" type="GridContainer"]
 anchors_preset = 15
@@ -28,31 +24,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PieChart" parent="Control" instance=ExtResource("1_ig7tw")]
+[node name="PieChart" type="Control" parent="Control"]
 layout_mode = 1
-size_flags_horizontal = 3
-size_flags_vertical = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ig7tw")
 elements = Dictionary[String, float]({
-"aaaaaaaaa": 10.0,
-"bbbbbbbb": 11.0,
-"cccccccccccccccccccccc": 12.0,
-"ddddddddddddddd": 13.0
+"aaaa": 10.0,
+"bbbbb": 11.0,
+"cccccccccccccccccccccc": 12.0
 })
-title = "aisuhaiushiaushapsuhiaush"
-legend_style = 2
 center_text = "center"
-separation_lines = true
-color_scale = 2
-scale_gradient = SubResource("Gradient_ig7tw")
-
-[node name="PieChart2" parent="." instance=ExtResource("1_ig7tw")]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-elements = Dictionary[String, float]({
-"aaaaaaaaa": 10.0,
-"bbbbbbbb": 11.0,
-"cccccccccccccccccccccc": 12.0,
-"ddddddddddddddd": 13.0
-})
-color_scale = 1
+outter_border = true
+inner_border = true
+lateral_borders = true
+center_color = Color(0, 0, 1, 1)
+metadata/_custom_type_script = "uid://biulhvvte3dvh"

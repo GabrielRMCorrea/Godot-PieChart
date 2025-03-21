@@ -20,10 +20,13 @@ enum LegendStyleOptions {
 @export var doughnut_shape: bool = true
 @export var center_text: String  # if doughnut_shape
 @export var center_proportion: float = 60.0  # if doughnut_shape
-@export var separation_lines: bool = false
 @export var color_scale: ColorScaleOptions = ColorScaleOptions.PRESET_1
-@export var custom_scale: Array[Color]  # if color_scale == CUSTOM
 @export var scale_gradient: Gradient  # if color_scale == GRADIENT_
+@export var custom_scale: Array[Color]  # if color_scale == CUSTOM
+@export_category("Borders")
+@export var outter_border : bool = false
+@export var inner_border : bool = false
+@export var lateral_borders : bool = false
 
 @export_group("Style Properties")
 @export var title_text_color: Color = Color.WHITE
@@ -34,17 +37,30 @@ enum LegendStyleOptions {
 @export var center_text_color: Color = Color.BLACK
 @export var center_text_font_size: int = 16
 @export var line_color: Color = Color.WHITE
+@export var border_color: Color = Color.WHITE
+@export var border_width: float = 1
 
-func draw_circle_arc_poly(center: Vector2, radius: float, angle_from: float, angle_to: float, color: Color) -> void:
-	var nb_points: int = 32
-	var points_arc: PackedVector2Array = PackedVector2Array()
-	points_arc.push_back(center)
+func draw_slice(center: Vector2, radius: float, angle_from: float, angle_to: float, color: Color) -> void:
+	var nb_points: int = round((angle_to-angle_from)/5)
+	var outer_arc: Array[Vector2] = []
+	var inner_arc: Array[Vector2] = []
+
+	if doughnut_shape:
+		for i in range(nb_points + 1):
+			var angle_point: float = deg_to_rad(angle_from + i * (angle_to - angle_from) / nb_points)
+			inner_arc.push_front(center + Vector2(cos(angle_point), sin(angle_point)) * (radius*center_proportion/100))
+	else:
+		inner_arc.push_back(center)
 	
 	for i in range(nb_points + 1):
 		var angle_point: float = deg_to_rad(angle_from + i * (angle_to - angle_from) / nb_points)
-		points_arc.push_back(center + Vector2(cos(angle_point), sin(angle_point)) * radius)
+		outer_arc.push_back(center + Vector2(cos(angle_point), sin(angle_point)) * radius)
 	
-	draw_colored_polygon(points_arc, color)
+	draw_colored_polygon(inner_arc + outer_arc, color)
+	if inner_border and doughnut_shape:
+		draw_polyline(inner_arc, border_color, border_width, true)
+	if outter_border:
+		draw_polyline(outer_arc, border_color, border_width, true)
 
 func _draw() -> void:
 	var radius: float = min(size.x, size.y) / 4.0
@@ -149,17 +165,16 @@ func _draw() -> void:
 			elements_text_color
 		)
 		
-		draw_circle_arc_poly(center, radius, previous_angle, previous_angle + current_angle, color)
+		draw_slice(center, radius, previous_angle, previous_angle + current_angle, color)
 		separation_lines_parameters.append([
-			center,
+			center + Vector2(cos(angle), sin(angle)) * (radius*center_proportion/100) if doughnut_shape else center,
 			center + Vector2(cos(angle), sin(angle)) * radius,
-			Color.WHITE,
-			2.0,
+			border_color,
+			border_width,
 			true
 		])
 		previous_angle += current_angle
 	
-	# Draw title
 	draw_multiline_string(
 		ThemeDB.fallback_font,
 		Vector2(35.0, 35.0),
@@ -171,12 +186,12 @@ func _draw() -> void:
 		title_text_color
 	)
 	
-	if separation_lines:
+	if lateral_borders:
 		for params in separation_lines_parameters:
 			draw_line.callv(params)
 	
 	if doughnut_shape:
-		draw_circle(center, radius * center_proportion / 100.0, center_color)
+		draw_circle(center, (radius * center_proportion / 100.0) - border_width , center_color, true, -1, true)
 		var label_size: Vector2 = ThemeDB.fallback_font.get_multiline_string_size(center_text)
 		draw_multiline_string(
 			ThemeDB.fallback_font,
