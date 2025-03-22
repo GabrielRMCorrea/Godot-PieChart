@@ -38,8 +38,5 @@ elements = Dictionary[String, float]({
 "cccccccccccccccccccccc": 12.0
 })
 center_text = "center"
-outter_border = true
-inner_border = true
 lateral_borders = true
-center_color = Color(0, 0, 1, 1)
 metadata/_custom_type_script = "uid://biulhvvte3dvh"

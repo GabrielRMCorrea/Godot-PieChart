@@ -11,7 +11,7 @@ enum ColorScaleOptions {
 enum LegendStyleOptions {
 	DIRECT_LINE,
 	DIRECT_LABEL,
-	SEPARATED_LABEL,
+	SIDE_LEGEND,
 }
 
 @export var elements: Dictionary[String, float]
@@ -24,7 +24,7 @@ enum LegendStyleOptions {
 @export var scale_gradient: Gradient  # if color_scale == GRADIENT_
 @export var custom_scale: Array[Color]  # if color_scale == CUSTOM
 @export_category("Borders")
-@export var outter_border : bool = false
+@export var outer_border : bool = false
 @export var inner_border : bool = false
 @export var lateral_borders : bool = false
 
@@ -59,13 +59,13 @@ func draw_slice(center: Vector2, radius: float, angle_from: float, angle_to: flo
 	draw_colored_polygon(inner_arc + outer_arc, color)
 	if inner_border and doughnut_shape:
 		draw_polyline(inner_arc, border_color, border_width, true)
-	if outter_border:
+	if outer_border:
 		draw_polyline(outer_arc, border_color, border_width, true)
 
 func _draw() -> void:
 	var radius: float = min(size.x, size.y) / 4.0
 	var center: Vector2 = Vector2(
-		size.x / (3.0 if legend_style == LegendStyleOptions.SEPARATED_LABEL else 2.0),
+		size.x / (3.0 if legend_style == LegendStyleOptions.SIDE_LEGEND else 2.0),
 		size.y / 2.0
 	)
 	var previous_angle: float = 0.0
@@ -99,10 +99,12 @@ func _draw() -> void:
 				)
 			
 			ColorScaleOptions.GRADIENT_:
-				color = scale_gradient.sample(float(counter) / (values_size - 1))
+				if scale_gradient:
+					color = scale_gradient.sample(float(counter) / (values_size - 1))
 			
 			ColorScaleOptions.CUSTOM:
-				color = custom_scale[counter % custom_scale.size()]
+				if custom_scale:
+					color = custom_scale[counter % custom_scale.size()]
 		
 		counter += 1
 		
@@ -112,7 +114,7 @@ func _draw() -> void:
 		var angle: float = deg_to_rad(current_angle + previous_angle)
 		var mid_angle: float = angle - deg_to_rad(current_angle / 2.0)
 		var angle_point: Vector2 = Vector2(cos(mid_angle), sin(mid_angle)) * radius
-		var text: String = key + (" - " if legend_style == LegendStyleOptions.SEPARATED_LABEL else "\n") + str(snappedf(percentage,0.01)).pad_decimals(2) + "%"
+		var text: String = key + (" - " if legend_style == LegendStyleOptions.SIDE_LEGEND else "\n") + str(snappedf(percentage,0.01)).pad_decimals(2) + "%"
 		
 		var label_size: Vector2 = ThemeDB.fallback_font.get_multiline_string_size(
 			text, HORIZONTAL_ALIGNMENT_CENTER
@@ -139,7 +141,7 @@ func _draw() -> void:
 				)
 				label_position = center - label_center + angle_point * 1.05 + offset
 			
-			LegendStyleOptions.SEPARATED_LABEL:
+			LegendStyleOptions.SIDE_LEGEND:
 				label_position.x = size.x - label_size.x - (radius / 5.0) - label_size.y
 				label_position.y = label_size.y + (label_size.y + 5.0) * counter + (radius / 5.0)
 				draw_rect(
@@ -157,7 +159,7 @@ func _draw() -> void:
 			ThemeDB.fallback_font,
 			label_position,
 			text,
-			HORIZONTAL_ALIGNMENT_RIGHT if legend_style == LegendStyleOptions.SEPARATED_LABEL \
+			HORIZONTAL_ALIGNMENT_RIGHT if legend_style == LegendStyleOptions.SIDE_LEGEND \
 				else HORIZONTAL_ALIGNMENT_CENTER,
 			label_size.x,
 			elements_font_size,
@@ -191,7 +193,7 @@ func _draw() -> void:
 			draw_line.callv(params)
 	
 	if doughnut_shape:
-		draw_circle(center, (radius * center_proportion / 100.0) - border_width , center_color, true, -1, true)
+		draw_circle(center, (radius * center_proportion / 100.0) - (border_width if inner_border else 0.0) , center_color, true, -1, true)
 		var label_size: Vector2 = ThemeDB.fallback_font.get_multiline_string_size(center_text)
 		draw_multiline_string(
 			ThemeDB.fallback_font,
@@ -203,3 +205,11 @@ func _draw() -> void:
 			-1,
 			center_text_color
 		)
+
+func _ready() -> void:
+	if not elements.values().filter(func(number): return number > 0):
+		push_warning("No elements to display")
+	if color_scale == ColorScaleOptions.GRADIENT_ and not scale_gradient:
+		push_warning("Gradient not found")
+	if color_scale == ColorScaleOptions.CUSTOM and not custom_scale:
+		push_warning("Custom color scale not specified")
