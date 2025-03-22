@@ -1,28 +1,42 @@
+## A configurable pie/doughnut chart node with dynamic legends and color schemes.
+## [b]Usage:[/b] Assign data via the [code]elements[/code] property and customize styles in the inspector.
 class_name PieChart
 extends Control
 
 enum ColorScaleOptions {
-	PRESET_1,
-	PRESET_2,
+	## Vibrating colors.
+	ALTERNATING_HUE,
+	## Pastel colors.
+	OKHSL,
+	## Custom gradient (assign [code]scale_gradient[/code]).
 	GRADIENT_,
+	## Manually specify colors in [code]custom_scale[/code] (colors will repeat itself if custom_scale array size is smaller than the number of elements with value >0).
 	CUSTOM,
 }
 
 enum LegendStyleOptions {
+	## Labels connected to slices with lines
 	DIRECT_LINE,
+	## Labels placed near slices.
 	DIRECT_LABEL,
+	## Legend displayed on the right side.
 	SIDE_LEGEND,
 }
-
+## Data to visualize. Keys are labels (e.g., "Category A"), values are numbers.
+## [b]Note:[/b] Values <= 0 will be ignored.
 @export var elements: Dictionary[String, float]
 @export var title: String
 @export var legend_style: LegendStyleOptions = LegendStyleOptions.DIRECT_LINE
+@export_category("Doughnut Shape")
 @export var doughnut_shape: bool = true
+## Text displayed at the center of the chart (only for doughnut shapes).
 @export var center_text: String  # if doughnut_shape
 @export var center_proportion: float = 60.0  # if doughnut_shape
-@export var color_scale: ColorScaleOptions = ColorScaleOptions.PRESET_1
+@export_category("Color Scale")
+@export var color_scale: ColorScaleOptions = ColorScaleOptions.ALTERNATING_HUE
 @export var scale_gradient: Gradient  # if color_scale == GRADIENT_
 @export var custom_scale: Array[Color]  # if color_scale == CUSTOM
+## Border visibility toggles. All borders use [code]border_color[/code]
 @export_category("Borders")
 @export var outer_border : bool = false
 @export var inner_border : bool = false
@@ -39,7 +53,15 @@ enum LegendStyleOptions {
 @export var line_color: Color = Color.WHITE
 @export var border_color: Color = Color.WHITE
 @export var border_width: float = 1
+@export var font : Font = ThemeDB.fallback_font
 
+## Draws a chart slice between two angles.
+## [b]Note:[/b] Called automatically during [method _draw].
+## @param center: Chart center position in pixels.
+## @param radius: Outer radius of the slice.
+## @param angle_from: Starting angle (degrees).
+## @param angle_to: Ending angle (degrees).
+## @param color: Fill color for the slice.
 func draw_slice(center: Vector2, radius: float, angle_from: float, angle_to: float, color: Color) -> void:
 	var nb_points: int = round((angle_to-angle_from)/5)
 	var outer_arc: Array[Vector2] = []
@@ -82,7 +104,7 @@ func _draw() -> void:
 		# Choosing color
 		var color: Color
 		match color_scale:
-			ColorScaleOptions.PRESET_1:
+			ColorScaleOptions.ALTERNATING_HUE:
 				@warning_ignore("integer_division")
 				color = Color.from_hsv(
 					1.0 / (values_size + 1) * counter / 2 if counter % 2 == 0 
@@ -91,7 +113,7 @@ func _draw() -> void:
 					0.9
 				)
 			
-			ColorScaleOptions.PRESET_2:
+			ColorScaleOptions.OKHSL:
 				color = Color.from_ok_hsl(
 					1.0 / values_size * counter,
 					1.0,
@@ -116,7 +138,7 @@ func _draw() -> void:
 		var angle_point: Vector2 = Vector2(cos(mid_angle), sin(mid_angle)) * radius
 		var text: String = key + (" - " if legend_style == LegendStyleOptions.SIDE_LEGEND else "\n") + str(snappedf(percentage,0.01)).pad_decimals(2) + "%"
 		
-		var label_size: Vector2 = ThemeDB.fallback_font.get_multiline_string_size(
+		var label_size: Vector2 = font.get_multiline_string_size(
 			text, HORIZONTAL_ALIGNMENT_CENTER
 		)
 		var label_center: Vector2 = Vector2(label_size.x / 2.0, label_size.y / 8.0)
@@ -156,7 +178,7 @@ func _draw() -> void:
 				)
 		
 		draw_multiline_string(
-			ThemeDB.fallback_font,
+			font,
 			label_position,
 			text,
 			HORIZONTAL_ALIGNMENT_RIGHT if legend_style == LegendStyleOptions.SIDE_LEGEND \
@@ -178,7 +200,7 @@ func _draw() -> void:
 		previous_angle += current_angle
 	
 	draw_multiline_string(
-		ThemeDB.fallback_font,
+		font,
 		Vector2(35.0, 35.0),
 		title,
 		HORIZONTAL_ALIGNMENT_CENTER,
@@ -194,18 +216,25 @@ func _draw() -> void:
 	
 	if doughnut_shape:
 		draw_circle(center, (radius * center_proportion / 100.0) - (border_width if inner_border else 0.0) , center_color, true, -1, true)
-		var label_size: Vector2 = ThemeDB.fallback_font.get_multiline_string_size(center_text)
-		draw_multiline_string(
-			ThemeDB.fallback_font,
-			center - Vector2(label_size.x / 2.0, -label_size.y / 4.0),
-			center_text,
-			HORIZONTAL_ALIGNMENT_CENTER,
-			label_size.x,
+		var label_size: Vector2 = font.get_multiline_string_size(center_text,HORIZONTAL_ALIGNMENT_CENTER,
+			radius,
 			center_text_font_size,
 			-1,
-			center_text_color
-		)
+			TextServer.BREAK_WORD_BOUND)
 
+		draw_multiline_string(
+			font,
+			center - Vector2(radius/2,label_size.y/4) ,
+			center_text,
+			HORIZONTAL_ALIGNMENT_CENTER,
+			radius,
+			center_text_font_size,
+			-1,
+			center_text_color,
+			TextServer.BREAK_WORD_BOUND
+		)
+func _property_changed():
+	print("aaaaa")
 func _ready() -> void:
 	if not elements.values().filter(func(number): return number > 0):
 		push_warning("No elements to display")

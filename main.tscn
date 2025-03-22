@@ -33,10 +33,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ig7tw")
 elements = Dictionary[String, float]({
+"DDD": 13.0,
 "aaaa": 10.0,
 "bbbbb": 11.0,
-"cccccccccccccccccccccc": 12.0
+"cccccccccccccccccccccc": 12.0,
+"dddddd": 0.0
 })
-center_text = "center"
+center_text = "centerfdg hdfgaaaaaaaaaaaaaaaaahdfghdfghdfhdfghasdadas dddddddddddddddddddddddddddddddddddddzzzzzzzzzzzzzzzzzzz zzzzzzzzd"
+outer_border = true
+inner_border = true
 lateral_borders = true
 metadata/_custom_type_script = "uid://biulhvvte3dvh"
