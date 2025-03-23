@@ -7,7 +7,7 @@ A simple customizable pie chart component for Godot Engine 4.
 
   
 
-![Pie Chart Demo]([https://i.imgur.com/1hulNsM.png](https://i.imgur.com/fuCI0B4.gif))
+![Pie Chart Demo]([https://i.imgur.com/1hulNsM.png](https://i.imgur.com/fuCI0B4.gifv))
 
   
   
