@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://dr55i4x5hjomc"]
+[gd_scene load_steps=4 format=3 uid="uid://dr55i4x5hjomc"]
 
+[ext_resource type="Script" uid="uid://cs1ij83nam05y" path="res://main.gd" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://biulhvvte3dvh" path="res://pie_chart.gd" id="1_ig7tw"]
+
+[sub_resource type="Gradient" id="Gradient_0xm2m"]
+interpolation_color_space = 1
+colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1)
 
 [node name="main" type="GridContainer"]
 anchors_preset = 15
@@ -9,6 +14,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 columns = 2
+script = ExtResource("1_0xm2m")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
@@ -32,15 +38,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ig7tw")
-elements = Dictionary[String, float]({
-"DDD": 13.0,
-"aaaa": 10.0,
-"bbbbb": 11.0,
-"cccccccccccccccccccccc": 12.0,
-"dddddd": 0.0
-})
-center_text = "centerfdg hdfgaaaaaaaaaaaaaaaaahdfghdfghdfhdfghasdadas dddddddddddddddddddddddddddddddddddddzzzzzzzzzzzzzzzzzzz zzzzzzzzd"
+title = "Game engines used to create 7711 GMTK Game Jam Games"
+center_text = "2024"
+color_scale = 2
+scale_gradient = SubResource("Gradient_0xm2m")
 outer_border = true
-inner_border = true
 lateral_borders = true
 metadata/_custom_type_script = "uid://biulhvvte3dvh"

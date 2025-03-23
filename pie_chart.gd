@@ -85,6 +85,7 @@ func draw_slice(center: Vector2, radius: float, angle_from: float, angle_to: flo
 		draw_polyline(outer_arc, border_color, border_width, true)
 
 func _draw() -> void:
+	check_warnings()
 	var radius: float = min(size.x, size.y) / 4.0
 	var center: Vector2 = Vector2(
 		size.x / (3.0 if legend_style == LegendStyleOptions.SIDE_LEGEND else 2.0),
@@ -96,11 +97,10 @@ func _draw() -> void:
 	var values_size: int = values.size()
 	var total: float = values.reduce(func sum(accum, number): return accum + number) if values else 0.0
 	var separation_lines_parameters: Array = []
-	
 	for key: String in elements:
 		if elements[key] <= 0.0:
 			continue
-		
+
 		# Choosing color
 		var color: Color
 		match color_scale:
@@ -203,8 +203,8 @@ func _draw() -> void:
 		font,
 		Vector2(35.0, 35.0),
 		title,
-		HORIZONTAL_ALIGNMENT_CENTER,
-		-1.0,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		size.x -40,
 		title_font_size,
 		-1,
 		title_text_color
@@ -220,22 +220,21 @@ func _draw() -> void:
 			radius,
 			center_text_font_size,
 			-1,
-			TextServer.BREAK_WORD_BOUND)
+			TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND)
 
 		draw_multiline_string(
 			font,
-			center - Vector2(radius/2,label_size.y/4) ,
+			center - Vector2(radius/2,(label_size.y/23 -1) * 6 -6),
 			center_text,
 			HORIZONTAL_ALIGNMENT_CENTER,
 			radius,
 			center_text_font_size,
 			-1,
 			center_text_color,
-			TextServer.BREAK_WORD_BOUND
+			TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND
 		)
-func _property_changed():
-	print("aaaaa")
-func _ready() -> void:
+
+func check_warnings() -> void:
 	if not elements.values().filter(func(number): return number > 0):
 		push_warning("No elements to display")
 	if color_scale == ColorScaleOptions.GRADIENT_ and not scale_gradient:
