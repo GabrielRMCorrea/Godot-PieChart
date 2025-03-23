@@ -7,67 +7,17 @@ A simple customizable pie chart component for Godot Engine 4.
 
   
 
-![Pie Chart Demo](https://i.imgur.com/1hulNsM.png)
+![Pie Chart Demo]([https://i.imgur.com/1hulNsM.png](https://i.imgur.com/fuCI0B4.gif))
 
   
   
 
 ## Usage
 
- Add the `PieChart` node to your scene
+ Add the `pie_chart.gd` file to your project
 
+Add it as a new node to your scene:![enter image description here](https://i.imgur.com/WKKY8Gz.jpg)
+Thats it
   
 
-### Inspector Configuration
 
-Select the node and set properties in the inspector:
-
--  **Values**: Dictionary of category names (String) and their values (float)
-
--  **Title**: Text to display in center (if enabled)
-
--  **CenterCircle**: Toggle center white circle
-
--  **SeparationLines**: Toggle wedge separation lines
-
-  
-
-![Inspector Properties](https://i.imgur.com/nZRtjU8.png)
-
-  
-
-### Programmatic Usage
-
-Create and configure charts entirely through code:
-
-  
-
-```gdscript
-
-# Create and configure a new chart
-
-@onready var chart = $PieChart
-
-  
-
-# Configure properties
-
-chart.Values = {
-
-"Cats": 30.0,
-
-"Dogs": 60,
-
-"Fish": 6,
-
-"Rabbits": 5,
-
-"Roddents": 4.0
-
-}
-
-chart.Title = "Pets"
-
-chart.CenterCircle = true
-
-chart.SeparationLines = false
