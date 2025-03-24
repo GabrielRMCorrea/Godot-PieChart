@@ -1,0 +1,6 @@
+# Ignore everything
+*
+!pie_chart.gd
+!README.md
+!LICENSE.txt
+!.gitignore
