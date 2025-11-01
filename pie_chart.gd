@@ -22,11 +22,25 @@ enum LegendStyleOptions {
 	## Legend displayed on the right side.
 	SIDE_LEGEND,
 }
+
+enum LabelVisibilityOptions {
+	## Labels only show percentages
+	ONLY_PERCENTAGES,
+	## Labels only show data distribution
+	ONLY_DATA,
+	## Labels shows both, data and percentages
+	DATA_AND_PERCENTAGES
+}
 ## Data to visualize. Keys are labels (e.g., "Category A"), values are numbers.
 ## [b]Note:[/b] Values <= 0 will be ignored.
 @export var elements: Dictionary[String, float]
+@export_category("Text Management")
 @export var title: String
 @export var legend_style: LegendStyleOptions = LegendStyleOptions.DIRECT_LINE
+@export var use_translation_server: bool = true
+@export var data_prefix: String = ""
+@export var data_suffix: String = ""
+@export var label_visibility: LabelVisibilityOptions = LabelVisibilityOptions.ONLY_PERCENTAGES
 @export_category("Doughnut Shape")
 @export var doughnut_shape: bool = true
 ## Text displayed at the center of the chart (only for doughnut shapes).
@@ -136,17 +150,27 @@ func _draw() -> void:
 		var angle: float = deg_to_rad(current_angle + previous_angle)
 		var mid_angle: float = angle - deg_to_rad(current_angle / 2.0)
 		var angle_point: Vector2 = Vector2(cos(mid_angle), sin(mid_angle)) * radius
-		var text: String = key + (" - " if legend_style == LegendStyleOptions.SIDE_LEGEND else "\n") + str(snappedf(percentage,0.01)).pad_decimals(2) + "%"
 		
+		# The text labels, such as Data name, Data itself and the percentage of distribution
+		var text := ""
+		var label_sep := " - " if legend_style == LegendStyleOptions.SIDE_LEGEND else "\n"
+		text += uses_translate_server(key)
+		if label_visibility in [LabelVisibilityOptions.ONLY_DATA, LabelVisibilityOptions.DATA_AND_PERCENTAGES]:
+			text += label_sep + data_prefix + str(elements[key]).pad_decimals(2) + data_suffix
+		if label_visibility in [LabelVisibilityOptions.ONLY_PERCENTAGES, LabelVisibilityOptions.DATA_AND_PERCENTAGES]:
+			text += label_sep + str(snappedf(percentage, 0.01)).pad_decimals(2) + "%"
+			
+			
 		var label_size: Vector2 = font.get_multiline_string_size(
 			text, HORIZONTAL_ALIGNMENT_CENTER
 		)
+		
 		var label_center: Vector2 = Vector2(label_size.x / 2.0, label_size.y / 8.0)
 		var label_position: Vector2
 		
 		match legend_style:
 			LegendStyleOptions.DIRECT_LINE:
-				label_position = center - label_center + angle_point * 1.5
+				label_position = center - label_center + angle_point * 1.55
 				draw_line(
 					angle_point * 1.05 + center,
 					angle_point * 1.2 + center,
@@ -202,7 +226,7 @@ func _draw() -> void:
 	draw_multiline_string(
 		font,
 		Vector2(35.0, 35.0),
-		title,
+		uses_translate_server(title),
 		HORIZONTAL_ALIGNMENT_LEFT,
 		size.x -40,
 		title_font_size,
@@ -225,7 +249,7 @@ func _draw() -> void:
 		draw_multiline_string(
 			font,
 			center - Vector2(radius/2,(label_size.y/23 -1) * 6 -6),
-			center_text,
+			uses_translate_server(center_text),
 			HORIZONTAL_ALIGNMENT_CENTER,
 			radius,
 			center_text_font_size,
@@ -234,8 +258,22 @@ func _draw() -> void:
 			TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND
 		)
 
+func set_new_data(data: Dictionary) -> void:
+	elements = data
+	queue_redraw()
+
+func uses_translate_server(text: String) -> String:
+	if use_translation_server:
+		return tr(text)
+	else:
+		return text
+
 func check_warnings() -> void:
 	if not elements.values().filter(func(number): return number > 0):
+		var data: Dictionary[String, float] = { #draws empty graph, instead of no graph
+			"" : 0
+		}
+		set_new_data(data)
 		push_warning("No elements to display")
 	if color_scale == ColorScaleOptions.GRADIENT_ and not scale_gradient:
 		push_warning("Gradient not found")
