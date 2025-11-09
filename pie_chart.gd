@@ -111,7 +111,7 @@ func _draw() -> void:
 	var values_size: int = values.size()
 	var total: float = values.reduce(func sum(accum, number): return accum + number) if values else 0.0
 	var separation_lines_parameters: Array = []
-	var max_decimal_step : int = elements.values().map(func(x): return(String.num(x).rsplit(".")[1].trim_suffix("0").length() )).max()
+	var max_decimal_step : int = values.map(func(x): return(String.num(x).rsplit(".")[1].trim_suffix("0").length() )).max()
 
 	for key: String in elements:
 		if elements[key] <= 0.0:
