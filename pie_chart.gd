@@ -111,6 +111,8 @@ func _draw() -> void:
 	var values_size: int = values.size()
 	var total: float = values.reduce(func sum(accum, number): return accum + number) if values else 0.0
 	var separation_lines_parameters: Array = []
+	var max_decimal_step : int = elements.values().map(func(x): return(String.num(x).rsplit(".")[1].trim_suffix("0").length() )).max()
+
 	for key: String in elements:
 		if elements[key] <= 0.0:
 			continue
@@ -156,7 +158,7 @@ func _draw() -> void:
 		var label_sep := " - " if legend_style == LegendStyleOptions.SIDE_LEGEND else "\n"
 		text += uses_translate_server(key)
 		if label_visibility in [LabelVisibilityOptions.ONLY_DATA, LabelVisibilityOptions.DATA_AND_PERCENTAGES]:
-			text += label_sep + data_prefix + str(elements[key]).pad_decimals(2) + data_suffix
+			text += label_sep + data_prefix + String.num(elements[key]).pad_decimals(max_decimal_step) + data_suffix
 		if label_visibility in [LabelVisibilityOptions.ONLY_PERCENTAGES, LabelVisibilityOptions.DATA_AND_PERCENTAGES]:
 			text += label_sep + str(snappedf(percentage, 0.01)).pad_decimals(2) + "%"
 			
