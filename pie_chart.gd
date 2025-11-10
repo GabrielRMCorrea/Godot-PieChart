@@ -260,7 +260,7 @@ func _draw() -> void:
 			TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND
 		)
 
-func set_new_data(data: Dictionary) -> void:
+func set_new_data(data: Dictionary[String, float]) -> void:
 	elements = data
 	queue_redraw()
 
